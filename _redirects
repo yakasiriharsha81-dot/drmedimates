@@ -1,0 +1,12 @@
+# Netlify Redirects for myHealthMate AI
+/dashboard    /dashboard.html    200
+/reports      /reports.html      200
+/analysis     /analysis.html     200
+/assistant    /assistant.html    200
+/history      /history.html      200
+/login        /login.html        200
+/register     /register.html     200
+/profile      /profile.html      200
+/admin        /admin.html        200
+/api/v1/*     /.netlify/functions/api/:splat  200
+/*            /index.html        200

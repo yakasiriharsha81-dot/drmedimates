@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Analysis — myHealthMate AI</title>
+  <meta name="description" content="View extracted lab parameters, standard reference ranges, educational clinical explanations, and doctor discussion guides.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <style>
+    .report-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-light);
+    }
+    .report-meta-item {
+      font-size: 0.825rem;
+    }
+    .report-meta-label {
+      color: var(--text-muted);
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+    }
+    .report-meta-val {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .transparency-banner {
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+    }
+    .structured-table-card {
+      margin-top: 32px;
+    }
+    .status-badge.optimal { background: rgba(0, 230, 184, 0.15); color: var(--accent-teal); }
+    .status-badge.elevated { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+    .status-badge.borderline { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+    .status-badge.low { background: rgba(239, 68, 68, 0.15); color: var(--accent-danger); }
+    .status-badge.needs_review { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+  </style>
+</head>
+<body>
+  <!-- Medical Disclaimer Banner -->
+  <div class="disclaimer-banner">
+    <span class="disclaimer-badge" data-i18n="disclaimer_badge">Demonstration Mode</span>
+    <span data-i18n="disclaimer_text">Educational Analysis Only: These extracted values are demonstrations. myHealthMate AI never diagnoses or recommends medication changes. Consult your physician.</span>
+  </div>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">
+          <img src="assets/logo.svg" alt="myHealthMate AI Logo">
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category" data-i18n="nav.mainMenu">Main Menu</div>
+        <a href="dashboard.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span data-i18n="nav.dashboard">Dashboard</span>
+        </a>
+        <a href="reports.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <span data-i18n="nav.reports">Upload Reports</span>
+          <span class="sidebar-badge">PDF/IMG</span>
+        </a>
+        <a href="analysis.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>
+          <span data-i18n="nav.analysis">Report Analysis</span>
+        </a>
+        <a href="history.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span data-i18n="nav.history">Medical History</span>
+        </a>
+
+        <div class="nav-category" data-i18n="nav.intelligence">Intelligence</div>
+        <a href="assistant.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          <span data-i18n="nav.assistant">AI Companion</span>
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span data-i18n="nav.profile">Profile & Privacy</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar user-avatar-display">AM</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name user-name-display">Alex Morgan</div>
+            <div class="sidebar-user-role">Patient Session</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <header class="app-topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div class="topbar-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" placeholder="Search extracted biomarkers..." data-i18n-placeholder="common.search" aria-label="Search biomarkers">
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <!-- Multilingual Selector -->
+          <div class="lang-select-wrapper">
+            <select class="lang-selector" aria-label="Select Language">
+              <option value="en">English</option>
+              <option value="te">తెలుగు (Telugu)</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+            </select>
+          </div>
+
+          <button class="btn btn-outline btn-sm" id="open-preview-btn" onclick="openModal('report-preview-modal')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <span data-i18n="analysis.viewLabSheet">View Lab Sheet</span>
+          </button>
+          <div class="user-menu-pill" id="profile-menu-btn">
+            <div class="user-avatar user-avatar-display">AM</div>
+            <span class="user-name-label user-name-display">Alex Morgan</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <!-- Section A: Report Information Card -->
+        <div class="glass-card" style="margin-bottom: 28px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+            <div>
+              <div style="display: inline-flex; align-items: center; gap: 6px; color: var(--accent-cyan); font-size: 0.8rem; font-weight: 600; margin-bottom: 6px;">
+                <span class="live-dot" style="width: 6px; height: 6px;"></span>
+                <span>AUTHENTICATED CLINICAL DOCUMENT</span>
+              </div>
+              <h1 class="page-title" id="analysis-report-title">Comprehensive Metabolic &amp; Lipid Panel</h1>
+              <p style="font-size: 0.875rem; color: var(--text-muted);" id="analysis-facility">MetroHealth Diagnostic Laboratory • Collected: January 14, 2026</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span class="status-badge completed" id="analysis-status-badge">COMPLETED</span>
+              <span class="status-badge" style="background: rgba(0, 212, 255, 0.1); color: var(--accent-cyan);" id="analysis-lang-badge">Lang: en</span>
+            </div>
+          </div>
+
+          <!-- Metadata Grid -->
+          <div class="report-meta-grid">
+            <div class="report-meta-item">
+              <div class="report-meta-label">Original Filename</div>
+              <div class="report-meta-val" id="analysis-filename">Comprehensive_Metabolic_Panel_Jan2026.pdf</div>
+            </div>
+            <div class="report-meta-item">
+              <div class="report-meta-label">Category</div>
+              <div class="report-meta-val" id="analysis-category">Lab Work (Biochemistry)</div>
+            </div>
+            <div class="report-meta-item">
+              <div class="report-meta-label">Collection Date</div>
+              <div class="report-meta-val" id="analysis-collection-date">January 14, 2026</div>
+            </div>
+            <div class="report-meta-item">
+              <div class="report-meta-label">Accession ID</div>
+              <div class="report-meta-val" id="analysis-accession">#MHL-2026-7482</div>
+            </div>
+          </div>
+
+          <!-- Processing Transparency Notice -->
+          <div class="transparency-banner">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; color: var(--accent-cyan);">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span id="analysis-transparency-text">
+              DEMONSTRATION NOTICE: Values are mapped against standardized biological reference intervals. Always verify against your paper lab report.
+            </span>
+          </div>
+
+          <!-- Plain-Language Summary Box -->
+          <div style="margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border-light);">
+            <strong style="color: var(--accent-teal); font-size: 0.875rem;" data-i18n="analysis.educationalSummary">Educational Summary:</strong>
+            <p style="margin-top: 6px; font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;" id="analysis-summary-text">
+              Loading synthesized biochemical interpretation...
+            </p>
+          </div>
+        </div>
+
+        <!-- Section B: Key Findings (Readable Parameter Cards) -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div>
+            <h2 style="font-size: 1.35rem;" data-i18n="analysis.keyFindings">Key Medical Findings</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="analysis.keyFindingsSub">Biomarker parameters compared to standard clinical reference intervals</p>
+          </div>
+        </div>
+
+        <div class="parameters-grid" id="parameters-grid">
+          <!-- Dynamically populated by analysis.js -->
+        </div>
+
+        <!-- Section C: Structured Table -->
+        <div class="glass-card structured-table-card">
+          <div class="card-title-row">
+            <div>
+              <h3 style="font-size: 1.2rem;" data-i18n="analysis.structuredTable">Structured Parameter Table</h3>
+              <p style="font-size: 0.825rem; color: var(--text-muted);">Tabular laboratory indicators with units, standard reference ranges, and clinical interpretation.</p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table" id="structured-lab-table">
+              <thead>
+                <tr>
+                  <th data-i18n="analysis.colParameter">Parameter</th>
+                  <th data-i18n="analysis.colResult">Result</th>
+                  <th data-i18n="analysis.colUnit">Unit</th>
+                  <th data-i18n="analysis.colRefRange">Reference Range</th>
+                  <th data-i18n="analysis.colStatus">Status</th>
+                  <th data-i18n="analysis.colInterpretation">Clinical Interpretation</th>
+                </tr>
+              </thead>
+              <tbody id="structured-table-tbody">
+                <!-- Dynamically populated by analysis.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section D: Doctor Discussion Guide -->
+        <div class="questions-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 style="font-size: 1.2rem; color: #fff; margin-bottom: 4px;" data-i18n="analysis.discussionGuide">Clinician Discussion Guide</h3>
+              <p style="font-size: 0.875rem; color: var(--text-secondary);" data-i18n="analysis.discussionGuideSub">Bring these tailored questions to your next physician appointment.</p>
+            </div>
+            <button class="btn btn-outline btn-sm" id="copy-questions-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span data-i18n="analysis.copyQuestions">Copy Questions</span>
+            </button>
+          </div>
+          <ul class="question-list" id="clinician-questions-list">
+            <!-- Dynamically populated by analysis.js -->
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section E: Secure Lab Document Preview Modal -->
+  <div class="modal-overlay" id="report-preview-modal" role="dialog" aria-modal="true" aria-labelledby="preview-modal-title">
+    <div class="modal-card" style="max-width: 740px;">
+      <div class="modal-header">
+        <h3 id="preview-modal-title" style="font-size: 1.25rem;">Secure Original Document Preview</h3>
+        <button class="modal-close-btn" data-modal-close aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div style="background: #ffffff; color: #1e293b; padding: 28px; border-radius: var(--radius-md); font-family: var(--font-body); position: relative; overflow: hidden;">
+        <!-- Watermark -->
+        <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0.08; font-size: 3.5rem; font-weight: 900; transform: rotate(-25deg); color: #000;">
+          SYNTHETIC DEMO
+        </div>
+
+        <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 16px;">
+          <div>
+            <h4 style="color: #0f172a; margin: 0; font-size: 1.15rem;">METROHEALTH DIAGNOSTIC LABS</h4>
+            <div style="font-size: 0.75rem; color: #64748b;">CLIA: 99D0928371 • CAP Accredited Laboratory</div>
+          </div>
+          <div style="text-align: right; font-size: 0.8rem; color: #334155;">
+            <div><strong>Patient:</strong> Alex Morgan (32Y / M)</div>
+            <div><strong>Accession:</strong> #MHL-2026-7482</div>
+            <div><strong>Collection:</strong> 2026-01-14 07:45 AM</div>
+          </div>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; color: #1e293b;">
+          <thead>
+            <tr style="border-bottom: 1px solid #cbd5e1; text-align: left;">
+              <th style="padding: 6px 0;">Test Name</th>
+              <th>Result</th>
+              <th>Flag</th>
+              <th>Ref Interval</th>
+              <th>Units</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 6px 0; font-weight: 600;">Glucose, Fasting</td>
+              <td>92</td>
+              <td>-</td>
+              <td>70 - 99</td>
+              <td>mg/dL</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9; background: #fef2f2;">
+              <td style="padding: 6px 0; font-weight: 600; color: #b91c1c;">Total Cholesterol</td>
+              <td style="font-weight: 700; color: #b91c1c;">218</td>
+              <td style="color: #b91c1c; font-weight: 700;">HIGH</td>
+              <td>&lt; 200</td>
+              <td>mg/dL</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9; background: #fef2f2;">
+              <td style="padding: 6px 0; font-weight: 600; color: #b91c1c;">LDL Cholesterol (Calc)</td>
+              <td style="font-weight: 700; color: #b91c1c;">128</td>
+              <td style="color: #b91c1c; font-weight: 700;">HIGH</td>
+              <td>&lt; 100</td>
+              <td>mg/dL</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 6px 0; font-weight: 600;">HDL Cholesterol</td>
+              <td>58</td>
+              <td>-</td>
+              <td>&gt; 40</td>
+              <td>mg/dL</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 6px 0; font-weight: 600;">Serum Creatinine</td>
+              <td>0.88</td>
+              <td>-</td>
+              <td>0.60 - 1.20</td>
+              <td>mg/dL</td>
+            </tr>
+            <tr style="background: #fffbeb;">
+              <td style="padding: 6px 0; font-weight: 600; color: #b45309;">Vitamin D, 25-OH</td>
+              <td style="font-weight: 700; color: #b45309;">24.2</td>
+              <td style="color: #b45309; font-weight: 700;">LOW</td>
+              <td>30.0 - 100.0</td>
+              <td>ng/mL</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 12px;">
+        <button class="btn btn-outline btn-sm" onclick="window.showToast('Download Verified', 'Streaming private document...', 'info')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Download PDF
+        </button>
+        <button class="btn btn-ghost btn-sm" data-modal-close>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/i18n.js"></script>
+  <script type="module" src="js/analysis.js"></script>
+</body>
+</html>

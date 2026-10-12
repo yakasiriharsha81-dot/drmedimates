@@ -1,0 +1,511 @@
+/* ==========================================================================
+   myHealthMate AI — Comprehensive Responsive Layouts & Accessibility Engine
+   Tested viewports: 320px, 360px, 375px, 390px, 430px, 768px, 1024px, 1280px, 1440px, 1920px
+   ========================================================================== */
+
+/* Universal Box Sizing & Fluid Overflow Protection */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Touch Targets Standard (Minimum 44px for mobile interactive targets) */
+@media (pointer: coarse) {
+  button, 
+  .btn, 
+  .sidebar-link, 
+  .nav-link, 
+  .category-pill, 
+  .filter-btn,
+  .quick-chip {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* High Resolution & Large Screens (1440px - 1920px+) */
+@media screen and (min-width: 1440px) {
+  .container {
+    max-width: 1360px;
+  }
+  .app-main {
+    max-width: calc(100vw - var(--sidebar-width));
+  }
+  .app-content {
+    padding: 36px 48px;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Standard Desktop & Laptop (1025px - 1439px) */
+@media screen and (max-width: 1439px) and (min-width: 1025px) {
+  .container {
+    max-width: 1140px;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  }
+}
+
+/* Tablet & Compact Laptop Breakpoint (769px - 1024px) */
+@media screen and (max-width: 1024px) {
+  .hero-section {
+    background-position: 80% center;
+    background-image: 
+      linear-gradient(to right, 
+        rgba(6, 17, 31, 0.98) 0%, 
+        rgba(6, 17, 31, 0.94) 48%, 
+        rgba(6, 17, 31, 0.72) 75%, 
+        rgba(6, 17, 31, 0.45) 100%),
+      linear-gradient(to bottom, 
+        rgba(6, 17, 31, 0.9) 0%, 
+        rgba(6, 17, 31, 0) 18%),
+      linear-gradient(to top, 
+        #06111F 0%, 
+        rgba(6, 17, 31, 0) 25%),
+      url('../assets/images/hero-doctor-ai.jpg');
+    min-height: auto;
+    padding: 80px 0 60px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .hero-visual-showcase {
+    min-height: 160px;
+    align-items: flex-start;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+
+  .security-banner-card {
+    grid-template-columns: 1fr;
+    padding: 32px;
+  }
+
+  .chat-container {
+    grid-template-columns: 240px 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .parameters-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile & Small Tablet Breakpoint (<= 768px) */
+@media screen and (max-width: 768px) {
+  .hero-section {
+    background-position: 72% top;
+    background-image: 
+      linear-gradient(to bottom, 
+        rgba(6, 17, 31, 0.88) 0%, 
+        rgba(6, 17, 31, 0.96) 50%, 
+        #06111F 100%),
+      linear-gradient(to right, 
+        rgba(6, 17, 31, 0.98) 0%, 
+        rgba(6, 17, 31, 0.92) 100%),
+      url('../assets/images/hero-doctor-ai.jpg');
+    padding: 70px 0 50px;
+    min-height: auto;
+  }
+
+  .hero-visual-showcase {
+    display: none;
+  }
+
+  .app-layout {
+    display: block;
+    position: relative;
+  }
+
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 100;
+    transform: translateX(-100%);
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.8);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .app-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .mobile-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 17, 31, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 95;
+    display: none;
+  }
+
+  .mobile-sidebar-overlay.active {
+    display: block;
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+  }
+
+  .app-topbar {
+    padding: 0 16px;
+    height: 64px;
+    justify-content: space-between;
+  }
+
+  .topbar-search {
+    width: 160px;
+  }
+
+  .app-content {
+    padding: 20px 14px;
+    width: 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .parameters-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Chat Interface on Mobile */
+  .chat-container {
+    grid-template-columns: 1fr;
+    height: calc(100vh - 160px);
+    position: relative;
+  }
+
+  .chat-sidebar {
+    display: none;
+  }
+
+  .chat-sidebar.active-mobile {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+  }
+
+  #toggle-history-btn {
+    display: inline-flex !important;
+  }
+
+  .chat-bubble {
+    max-width: 92%;
+    font-size: 0.9rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .chat-input-row {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .quick-chips {
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .quick-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Navbar Mobile */
+  .nav-wrapper {
+    height: 64px;
+    padding: 0 16px;
+  }
+
+  .main-nav {
+    display: none;
+  }
+
+  .hero-section {
+    padding: 40px 0 32px;
+  }
+
+  .hero-cta-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .hero-cta-group .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .trust-badges {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  /* Table Mobile Horizontal Scroll */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-md);
+  }
+
+  .custom-table {
+    min-width: 580px;
+  }
+}
+
+/* Extra Small Phones (320px - 430px) */
+@media screen and (max-width: 430px) {
+  body {
+    font-size: 14px;
+  }
+
+  .hero-ecg-wrapper {
+    margin: 12px 0 16px 0;
+  }
+
+  .hero-ecg-card {
+    padding: 8px 10px 8px 10px;
+  }
+
+  .hero-ecg-header {
+    font-size: 0.65rem;
+  }
+
+  .hero-ecg-status {
+    display: none;
+  }
+
+  .hero-ecg-svg-container {
+    height: 40px;
+  }
+
+  .app-topbar {
+    padding: 0 10px;
+    gap: 8px;
+  }
+
+  .topbar-search {
+    display: none;
+  }
+
+  .user-name-label {
+    display: none;
+  }
+
+  .user-menu-pill {
+    padding: 4px;
+  }
+
+  .demo-status-pill {
+    display: none;
+  }
+
+  .lang-selector {
+    padding: 5px 8px;
+    font-size: 0.775rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .page-title {
+    font-size: 1.35rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .card-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .modal-card {
+    width: calc(100% - 24px);
+    max-width: 100%;
+    margin: 12px;
+    padding: 18px 16px;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  .upload-dropzone {
+    padding: 24px 14px;
+  }
+
+  .report-meta-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .range-track-container {
+    margin-top: 10px;
+  }
+
+  .chat-bubble {
+    max-width: 96%;
+    padding: 10px 12px;
+    font-size: 0.875rem;
+  }
+
+  .chat-input-textarea {
+    font-size: 0.875rem;
+    padding: 10px 12px;
+  }
+
+  .filter-tabs {
+    gap: 6px;
+  }
+
+  .filter-btn {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Ultra Small Screens (320px - 360px) */
+@media screen and (max-width: 360px) {
+  .page-title {
+    font-size: 1.2rem;
+  }
+  .app-content {
+    padding: 14px 10px;
+  }
+  .glass-card {
+    padding: 16px 12px;
+  }
+}
+
+/* Mobile optimization for ambient glow orbs */
+@media screen and (max-width: 768px) {
+  .ambient-orb {
+    filter: blur(45px) !important;
+    opacity: 0.10 !important;
+  }
+  .ambient-orb.orb-cyan {
+    width: 260px !important;
+    height: 260px !important;
+  }
+  .ambient-orb.orb-teal {
+    width: 240px !important;
+    height: 240px !important;
+  }
+  .ambient-orb.orb-purple {
+    display: none !important;
+  }
+}
+
+/* Accessibility: Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .ambient-orb,
+  .hero-animate-tag,
+  .hero-animate-title,
+  .hero-animate-desc,
+  .hero-animate-cta,
+  .hero-animate-trust,
+  .hero-animate-visual,
+  .floating-visual,
+  .ecg-line,
+  .ecg-line-cinematic,
+  .hero-animate-ecg,
+  .hero-ecg-trace-pulse,
+  .hero-ecg-scan-beam,
+  .hero-ecg-dot,
+  .chat-msg-animated,
+  .avatar-thinking-pulse,
+  .typing-dot,
+  .skeleton-box,
+  .stagger-item {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .hero-ecg-trace-pulse {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  .hero-ecg-scan-beam {
+    display: none !important;
+  }
+
+  .live-dot {
+    animation: none !important;
+  }
+
+  .toast {
+    animation: none !important;
+  }
+
+  .pulsing-dot {
+    animation: none !important;
+  }
+}

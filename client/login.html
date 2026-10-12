@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — myHealthMate AI</title>
+  <meta name="description" content="Sign in to your myHealthMate AI account or explore with instant synthetic demo accounts.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      padding: 38px;
+      position: relative;
+    }
+    .auth-topbar {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      max-width: 440px;
+      margin-bottom: 12px;
+    }
+    .demo-autofill-box {
+      margin-bottom: 24px;
+      padding: 14px;
+      background: rgba(0, 212, 255, 0.08);
+      border: 1px dashed var(--border-glass);
+      border-radius: var(--radius-md);
+    }
+    .demo-pill-btn {
+      background: rgba(16, 38, 59, 0.8);
+      border: 1px solid var(--border-glass);
+      color: var(--accent-cyan);
+      font-size: 0.775rem;
+      padding: 6px 12px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      margin-top: 8px;
+      margin-right: 6px;
+      transition: all var(--transition-fast);
+    }
+    .demo-pill-btn:hover {
+      background: var(--accent-cyan);
+      color: var(--bg-primary);
+    }
+  </style>
+</head>
+<body class="auth-page">
+  <div class="auth-topbar">
+    <div class="lang-select-wrapper">
+      <select class="lang-selector" aria-label="Select Language">
+        <option value="en">English</option>
+        <option value="te">తెలుగు (Telugu)</option>
+        <option value="hi">हिन्दी (Hindi)</option>
+        <option value="ta">தமிழ் (Tamil)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="glass-card auth-card">
+    <div style="text-align: center; margin-bottom: 28px;">
+      <a href="index.html">
+        <img src="assets/logo.svg" alt="myHealthMate AI" style="height: 42px; margin-bottom: 12px;">
+      </a>
+      <h2>Welcome Back</h2>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px;">Sign in to access your health companion</p>
+    </div>
+
+    <!-- Hackathon Quick Autofill Demo Credentials -->
+    <div class="demo-autofill-box">
+      <div style="font-size: 0.775rem; font-weight: 600; color: var(--accent-teal); text-transform: uppercase;">
+        ⚡ Instant Hackathon Demo Logins:
+      </div>
+      <div>
+        <button type="button" class="demo-pill-btn" id="autofill-patient">Patient: Alex Morgan</button>
+        <button type="button" class="demo-pill-btn" id="autofill-admin">Admin: Dr. Mitchell</button>
+      </div>
+    </div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label" for="login-email">Email Address</label>
+        <input type="email" id="login-email" class="form-control" placeholder="name@example.com" value="alex.morgan@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between;">
+          <label class="form-label" for="login-password">Password</label>
+          <a href="#" style="font-size: 0.8rem; color: var(--text-muted);" onclick="alert('Demo reset instructions sent to test session.')">Forgot?</a>
+        </div>
+        <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="PatientPass123!" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" data-i18n="nav.signIn">
+        Sign In to Portal
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 24px; font-size: 0.85rem; color: var(--text-muted);">
+      Don't have an account? <a href="register.html">Sign up</a> • <a href="index.html">Home</a>
+    </div>
+  </div>
+
+  <script type="module" src="js/i18n.js"></script>
+  <script type="module">
+    import { auth } from './js/auth.js';
+    import { showToast } from './js/main.js';
+
+    document.getElementById('autofill-patient').addEventListener('click', () => {
+      document.getElementById('login-email').value = 'alex.morgan@example.com';
+      document.getElementById('login-password').value = 'PatientPass123!';
+      showToast('Autofill Active', 'Loaded Patient test credentials.', 'info');
+    });
+
+    document.getElementById('autofill-admin').addEventListener('click', () => {
+      document.getElementById('login-email').value = 'admin@myhealthmate.ai';
+      document.getElementById('login-password').value = 'AdminPass123!';
+      showToast('Autofill Active', 'Loaded Admin test credentials.', 'info');
+    });
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-password').value;
+
+      const res = await auth.login(email, pass);
+      if (res.success) {
+        showToast('Login Successful', `Welcome back, ${res.user.name}!`, 'success');
+        setTimeout(() => {
+          if (res.user.role === 'ADMIN') {
+            window.location.href = 'admin.html';
+          } else {
+            window.location.href = 'dashboard.html';
+          }
+        }, 600);
+      }
+    });
+  </script>
+</body>
+</html>

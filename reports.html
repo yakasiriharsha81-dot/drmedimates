@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Report Upload — myHealthMate AI</title>
+  <meta name="description" content="Upload medical reports in PDF, PNG, or JPG for simulated processing, lab extraction, and educational analysis.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <style>
+    .status-badge.uploaded { background: rgba(59, 130, 246, 0.15); color: #60A5FA; }
+    .status-badge.processing { background: rgba(0, 212, 255, 0.15); color: var(--accent-cyan); }
+    .status-badge.completed { background: rgba(0, 230, 184, 0.15); color: var(--accent-teal); }
+    .status-badge.needs_review { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+    .status-badge.failed { background: rgba(239, 68, 68, 0.15); color: var(--accent-danger); }
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .filter-btn {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      font-size: 0.825rem;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: rgba(0, 212, 255, 0.12);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+  </style>
+</head>
+<body>
+  <!-- Medical Disclaimer Banner -->
+  <div class="disclaimer-banner">
+    <span class="disclaimer-badge" data-i18n="disclaimer_badge">Demonstration Mode</span>
+    <span data-i18n="disclaimer_text">myHealthMate AI provides educational insights and health record organization for demonstration purposes only. It does NOT provide medical diagnosis or prescribe medication. Always consult a licensed healthcare professional.</span>
+  </div>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">
+          <img src="assets/logo.svg" alt="myHealthMate AI Logo">
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category" data-i18n="nav.mainMenu">Main Menu</div>
+        <a href="dashboard.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span data-i18n="nav.dashboard">Dashboard</span>
+        </a>
+        <a href="reports.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <span data-i18n="nav.reports">Upload Reports</span>
+          <span class="sidebar-badge">PDF/IMG</span>
+        </a>
+        <a href="analysis.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>
+          <span data-i18n="nav.analysis">Report Analysis</span>
+        </a>
+        <a href="history.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span data-i18n="nav.history">Medical History</span>
+        </a>
+
+        <div class="nav-category" data-i18n="nav.intelligence">Intelligence</div>
+        <a href="assistant.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          <span data-i18n="nav.assistant">AI Companion</span>
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span data-i18n="nav.profile">Profile & Privacy</span>
+        </a>
+        <a href="admin.html" class="sidebar-link admin-nav-item" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span data-i18n="nav.admin">Admin Console</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar user-avatar-display">AM</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name user-name-display">Alex Morgan</div>
+            <div class="sidebar-user-role">Patient Session</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="app-main">
+      <header class="app-topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div class="topbar-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="report-search-input" placeholder="Search reports..." aria-label="Search reports">
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <!-- Multilingual Selector -->
+          <div class="lang-select-wrapper">
+            <select class="lang-selector" aria-label="Select Language">
+              <option value="en">English</option>
+              <option value="te">తెలుగు (Telugu)</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+            </select>
+          </div>
+
+          <span class="demo-status-pill">Upload Validator</span>
+          <!-- User Menu Pill -->
+          <div class="user-menu-pill" id="profile-menu-btn">
+            <div class="user-avatar user-avatar-display">AM</div>
+            <span class="user-name-label user-name-display">Alex Morgan</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="reports.title">Medical Report Intake</h1>
+            <p class="page-subtitle" data-i18n="reports.subtitle">Upload laboratory reports, metabolic panels, or cardiology scans for simulated educational analysis.</p>
+          </div>
+        </div>
+
+        <!-- Upload Dropzone -->
+        <div class="upload-dropzone" id="report-dropzone" role="button" tabindex="0" aria-label="Upload medical report dropzone">
+          <input type="file" id="report-file-input" style="display: none;" accept=".pdf,.png,.jpg,.jpeg">
+          <div class="upload-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+          </div>
+          <h3 data-i18n="reports.dropzoneTitle" style="font-size: 1.25rem; margin-bottom: 8px;">Drag and Drop your Medical Report here</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            or <span style="color: var(--accent-cyan); font-weight: 600; text-decoration: underline;" data-i18n="reports.dropzoneBrowse">click to browse files</span> from your computer
+          </p>
+          <div class="upload-formats-hint" data-i18n="reports.dropzoneFormats">
+            Accepted Formats: <strong>PDF, PNG, JPG, JPEG</strong> • Maximum File Size: <strong>10 MB</strong>
+          </div>
+        </div>
+
+        <!-- Live Upload / Simulated Progress Queue -->
+        <div id="upload-queue" class="upload-queue-list"></div>
+
+        <!-- Document Repository Table -->
+        <div class="glass-card" style="margin-top: 36px;">
+          <div class="card-title-row" style="flex-direction: column; align-items: flex-start; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h3 style="font-size: 1.15rem;" data-i18n="reports.uploadedReports">Processed Medical Reports</h3>
+                <p style="font-size: 0.825rem; color: var(--text-muted);" data-i18n="reports.uploadedReportsSub">Securely cataloged clinical documents available for educational analysis</p>
+              </div>
+              <div class="filter-tabs" id="status-filters">
+                <button class="filter-btn active" data-filter="ALL">All</button>
+                <button class="filter-btn" data-filter="COMPLETED">Completed</button>
+                <button class="filter-btn" data-filter="PROCESSING">Processing</button>
+                <button class="filter-btn" data-filter="NEEDS_REVIEW">Needs Review</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th data-i18n="reports.docName">Document Name</th>
+                  <th data-i18n="reports.category">Category</th>
+                  <th data-i18n="reports.size">Size</th>
+                  <th data-i18n="reports.uploadDate">Upload Date</th>
+                  <th data-i18n="reports.status">Status</th>
+                  <th data-i18n="reports.action">Action</th>
+                </tr>
+              </thead>
+              <tbody id="uploaded-reports-tbody">
+                <!-- Dynamically populated by reports.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/i18n.js"></script>
+  <script type="module" src="js/reports.js"></script>
+</body>
+</html>

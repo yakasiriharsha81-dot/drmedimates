@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Console — myHealthMate AI</title>
+  <meta name="description" content="Restricted operational dashboard for account governance and aggregate platform telemetry.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+</head>
+<body>
+  <!-- Disclaimer Banner -->
+  <div class="disclaimer-banner">
+    <span class="disclaimer-badge">Restricted Administration</span>
+    <span><strong>Operational Governance Only:</strong> Zero-trust isolation strictly forbids administrators from inspecting private report contents or health telemetry.</span>
+  </div>
+
+  <div class="app-layout">
+    <aside class="app-sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">
+          <img src="assets/logo.svg" alt="myHealthMate AI Logo">
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category">Main Menu</div>
+        <a href="dashboard.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Dashboard
+        </a>
+        <a href="admin.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          Admin Operations
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          Profile Settings
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar" style="background: var(--accent-purple);">SM</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Dr. Sarah Mitchell</div>
+            <div class="sidebar-user-role" style="color: var(--accent-cyan);">Platform Admin</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <span style="font-weight: 600; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+          <span class="live-dot" style="background-color: var(--accent-purple); box-shadow: 0 0 8px var(--accent-purple);"></span>
+          Operational System Telemetry &amp; User Accounts
+        </span>
+        <div class="topbar-actions">
+          <div class="lang-select-wrapper">
+            <select class="lang-selector" aria-label="Select Language">
+              <option value="en">English</option>
+              <option value="te">తెలుగు (Telugu)</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+            </select>
+          </div>
+          <a href="dashboard.html" class="btn btn-outline btn-sm">Switch to Patient View</a>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Operational Health &amp; Governance</h1>
+            <p class="page-subtitle">Aggregate service metrics, active tenants, and authentication audit logs.</p>
+          </div>
+        </div>
+
+        <!-- Privacy Guard Banner -->
+        <div style="background: rgba(16, 38, 59, 0.75); border: 1px solid rgba(0, 230, 184, 0.3); border-radius: var(--radius-lg); padding: 18px 24px; margin-bottom: 28px; display: flex; align-items: center; gap: 16px;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00E6B8" stroke-width="2" style="flex-shrink: 0;">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 12 11 14 15 10"></polyline>
+          </svg>
+          <div style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5;">
+            <strong style="color: var(--accent-teal);">Privacy By Design Guarantee:</strong>
+            Under strict platform authorization policies, administrators cannot inspect patient lab reports or access conversational health histories. All tenant data is cryptographically segregated.
+          </div>
+        </div>
+
+        <!-- Aggregate Operational Metrics -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Registered Accounts</span>
+              <div class="stat-icon cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></div>
+            </div>
+            <div class="stat-value">124</div>
+            <div class="stat-footer"><span class="stat-trend positive">+14 this week</span></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">Processed Lab Reports</span>
+              <div class="stat-icon teal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg></div>
+            </div>
+            <div class="stat-value">512</div>
+            <div class="stat-footer"><span class="stat-trend positive">100% extraction success</span></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">AI Inquiries Handled</span>
+              <div class="stat-icon purple"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></div>
+            </div>
+            <div class="stat-value">1,489</div>
+            <div class="stat-footer"><span class="stat-trend neutral">0 diagnostic claims</span></div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title">System Health &amp; Uptime</span>
+              <div class="stat-icon positive"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00E6B8" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+            </div>
+            <div class="stat-value" style="color: var(--accent-teal);">99.98%</div>
+            <div class="stat-footer"><span class="stat-trend positive">All microservices green</span></div>
+          </div>
+        </div>
+
+        <!-- Accounts Management Table -->
+        <div class="glass-card">
+          <div class="card-title-row">
+            <div>
+              <h3 style="font-size: 1.15rem;">Account Lifecycle &amp; Security Status</h3>
+              <p style="font-size: 0.825rem; color: var(--text-muted);">Manage authentication state without viewing private health data</p>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>User Tenant</th>
+                  <th>Role</th>
+                  <th>Registered</th>
+                  <th>Security State</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>Alex Morgan</strong>
+                    <div style="font-size: 0.775rem; color: var(--text-muted);">alex.morgan@example.com</div>
+                  </td>
+                  <td><span class="status-badge uploaded">PATIENT</span></td>
+                  <td>Aug 14, 2025</td>
+                  <td><span class="status-badge completed">ACTIVE</span></td>
+                  <td>
+                    <button class="btn btn-outline btn-sm" onclick="window.showToast('Security Action', 'Password reset challenge token generated for Alex Morgan.', 'info')">Send Reset Token</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Dr. Sarah Mitchell</strong>
+                    <div style="font-size: 0.775rem; color: var(--text-muted);">admin@myhealthmate.ai</div>
+                  </td>
+                  <td><span class="status-badge processing" style="color: var(--accent-purple);">ADMIN</span></td>
+                  <td>Jul 01, 2025</td>
+                  <td><span class="status-badge completed">ACTIVE</span></td>
+                  <td>
+                    <button class="btn btn-outline btn-sm" disabled style="opacity: 0.5;">Primary Admin</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Jordan Lee</strong>
+                    <div style="font-size: 0.775rem; color: var(--text-muted);">jordan.lee@example.com</div>
+                  </td>
+                  <td><span class="status-badge uploaded">PATIENT</span></td>
+                  <td>Nov 20, 2025</td>
+                  <td><span class="status-badge completed">ACTIVE</span></td>
+                  <td>
+                    <button class="btn btn-outline btn-sm" onclick="window.showToast('Security Action', 'Password reset challenge token generated for Jordan Lee.', 'info')">Send Reset Token</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/i18n.js"></script>
+</body>
+</html>

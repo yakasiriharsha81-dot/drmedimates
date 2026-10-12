@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — myHealthMate AI</title>
+  <meta name="description" content="myHealthMate AI Dashboard: View vital trends, synthesized lab metrics, and recent health activity.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <!-- Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- Medical Disclaimer Banner -->
+  <div class="disclaimer-banner">
+    <span class="disclaimer-badge" data-i18n="disclaimer_badge">Demonstration Mode</span>
+    <span data-i18n="disclaimer_text">myHealthMate AI provides educational insights and health record organization for demonstration purposes only. It does NOT provide medical diagnosis or prescribe medication. Always consult a licensed healthcare professional.</span>
+  </div>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="sidebar" aria-label="Sidebar Navigation">
+      <div class="sidebar-header">
+        <a href="index.html" class="sidebar-logo">
+          <img src="assets/logo.svg" alt="myHealthMate AI Logo">
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category" data-i18n="nav.mainMenu">Main Menu</div>
+        <a href="dashboard.html" class="sidebar-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span data-i18n="nav.dashboard">Dashboard</span>
+        </a>
+        <a href="reports.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <span data-i18n="nav.reports">Upload Reports</span>
+          <span class="sidebar-badge">PDF/IMG</span>
+        </a>
+        <a href="analysis.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+          </svg>
+          <span data-i18n="nav.analysis">Report Analysis</span>
+        </a>
+        <a href="history.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span data-i18n="nav.history">Medical History</span>
+        </a>
+
+        <div class="nav-category" data-i18n="nav.intelligence">Intelligence</div>
+        <a href="assistant.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
+          <span data-i18n="nav.assistant">AI Companion</span>
+        </a>
+        <a href="profile.html" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span data-i18n="nav.profile">Profile & Privacy</span>
+        </a>
+        <a href="admin.html" class="sidebar-link admin-nav-item" style="display: none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span data-i18n="nav.admin">Admin Console</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="sidebar-user-avatar user-avatar-display">AM</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name user-name-display">Alex Morgan</div>
+            <div class="sidebar-user-role">Patient Session</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="app-main">
+      <header class="app-topbar">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <button class="mobile-menu-btn" aria-label="Toggle navigation menu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="topbar-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" placeholder="Search lab tests, vitals, doctors..." aria-label="Search records">
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <!-- Multilingual Selector -->
+          <div class="lang-select-wrapper">
+            <select class="lang-selector" aria-label="Select Language">
+              <option value="en">English</option>
+              <option value="te">తెలుగు (Telugu)</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+            </select>
+          </div>
+
+          <span class="demo-status-pill">
+            <span class="live-dot" style="width: 6px; height: 6px;"></span>
+            Demo Telemetry
+          </span>
+
+          <!-- Notifications Trigger -->
+          <div style="position: relative;">
+            <button class="icon-btn" id="notif-btn" aria-label="Notifications">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span class="badge-dot"></span>
+            </button>
+
+            <!-- Notifications Drawer -->
+            <div class="notifications-dropdown" id="notif-dropdown">
+              <div class="notif-header">
+                <h4>Notifications</h4>
+                <span style="font-size: 0.75rem; color: var(--accent-cyan); cursor: pointer;">Mark all read</span>
+              </div>
+              <ul class="notif-list">
+                <li class="notif-item unread">
+                  <div class="notif-body">
+                    <div class="notif-title">Lab Analysis Ready</div>
+                    <div class="notif-desc">Educational summary for Comprehensive Metabolic Panel is available.</div>
+                    <div class="notif-time">2 hours ago</div>
+                  </div>
+                </li>
+                <li class="notif-item">
+                  <div class="notif-body">
+                    <div class="notif-title">Appointment Upcoming</div>
+                    <div class="notif-desc">Cardiology routine review on March 15, 2026 at 10:00 AM.</div>
+                    <div class="notif-time">Yesterday</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- User Menu Pill -->
+          <div style="position: relative;">
+            <div class="user-menu-pill" id="profile-menu-btn" role="button" aria-haspopup="true">
+              <div class="user-avatar user-avatar-display">AM</div>
+              <span class="user-name-label user-name-display">Alex Morgan</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown" id="profile-dropdown">
+              <a href="profile.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"></circle><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path></svg>
+                Account Settings
+              </a>
+              <a href="history.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                My Health Log
+              </a>
+              <div class="dropdown-divider"></div>
+              <button class="logout-btn" style="color: var(--accent-danger);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="app-content">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" data-i18n="dashboard.title">Health Overview & Telemetry</h1>
+            <p class="page-subtitle"><span data-i18n="dashboard.welcome">Welcome back</span>, <span class="user-name-display">Alex</span>. <span data-i18n="dashboard.welcomeSub">Here is your synthesized biomarker summary and vital telemetry.</span></p>
+          </div>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="reports.html" class="btn btn-primary btn-sm">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span data-i18n="dashboard.uploadReport">Upload Report</span>
+            </a>
+            <a href="assistant.html" class="btn btn-outline btn-sm">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              <span data-i18n="dashboard.askCompanion">Ask AI Companion</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title" data-i18n="dashboard.analyzedReports">Analyzed Reports</span>
+              <div class="stat-icon cyan">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+              </div>
+            </div>
+            <div class="stat-value" id="stat-total-reports">3</div>
+            <div class="stat-footer">
+              <span class="stat-trend positive">✓ Fully Processed</span>
+              <span style="color: var(--text-muted); margin-left: auto;">Last: Jan 15</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title" data-i18n="dashboard.abnormalFlags">Out-of-Range Flags</span>
+              <div class="stat-icon amber">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              </div>
+            </div>
+            <div class="stat-value" id="stat-abnormal-findings" style="color: var(--accent-amber);">2</div>
+            <div class="stat-footer">
+              <span class="stat-trend attention">Cholesterol &amp; Vit D</span>
+              <span style="color: var(--text-muted); margin-left: auto;">Doctor questions prepared</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title" data-i18n="dashboard.loggedEvents">Medical Log Events</span>
+              <div class="stat-icon teal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+              </div>
+            </div>
+            <div class="stat-value" id="stat-health-records">4</div>
+            <div class="stat-footer">
+              <span class="stat-trend positive">Continuous Log</span>
+              <span style="color: var(--text-muted); margin-left: auto;">Since Aug 2025</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <span class="stat-title" data-i18n="dashboard.upcomingConsultation">Upcoming Consultation</span>
+              <div class="stat-icon purple">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              </div>
+            </div>
+            <div class="stat-value" id="stat-appointments">1</div>
+            <div class="stat-footer">
+              <span class="stat-trend neutral">Dr. Evelyn Reed</span>
+              <span style="color: var(--text-muted); margin-left: auto;">Mar 15, 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Charts Grid -->
+        <div class="dashboard-grid">
+          <!-- Primary Chart: Blood Pressure & Heart Rate Trends -->
+          <div class="glass-card chart-card">
+            <div class="card-title-row">
+              <div>
+                <h3 style="font-size: 1.15rem;" data-i18n="dashboard.vitalTrends">Vital Sign Telemetry (6 Months)</h3>
+                <p style="font-size: 0.825rem; color: var(--text-muted);" data-i18n="dashboard.vitalTrendsSub">Systolic/Diastolic BP (mmHg) and Resting Heart Rate (bpm)</p>
+              </div>
+              <div class="card-actions">
+                <button class="filter-btn time-filter-btn" data-period="1M">1M</button>
+                <button class="filter-btn time-filter-btn" data-period="3M">3M</button>
+                <button class="filter-btn time-filter-btn active" data-period="6M">6M</button>
+                <button class="filter-btn time-filter-btn" data-period="1Y">1Y</button>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="healthTrendsChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Secondary Chart: Biomarker Lab Thresholds -->
+          <div class="glass-card chart-card">
+            <div class="card-title-row">
+              <div>
+                <h3 style="font-size: 1.15rem;" data-i18n="dashboard.biomarkers">Key Biomarkers vs Optimal</h3>
+                <p style="font-size: 0.825rem; color: var(--text-muted);" data-i18n="dashboard.biomarkersSub">Synthetic Lipid &amp; Glucose values</p>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="biomarkersChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Timeline & Quick Links -->
+        <div class="dashboard-grid">
+          <div class="glass-card">
+            <div class="card-title-row">
+              <h3 style="font-size: 1.15rem;" data-i18n="dashboard.recentActivity">Recent Health Activity</h3>
+              <a href="history.html" class="btn btn-ghost btn-sm">Full History &rarr;</a>
+            </div>
+            <div class="activity-timeline">
+              <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-title">Comprehensive Metabolic Panel Uploaded</div>
+                <div class="timeline-sub">MetroHealth Diagnostic Lab • 6 parameters analyzed</div>
+                <div class="timeline-date">Jan 15, 2026 at 10:30 AM</div>
+              </div>
+
+              <div class="timeline-item teal">
+                <div class="timeline-dot"></div>
+                <div class="timeline-title">Cardiology Follow-up &amp; ECG</div>
+                <div class="timeline-sub">Dr. Marcus Vance • Sinus rhythm confirmed (68 bpm)</div>
+                <div class="timeline-date">Dec 10, 2025 at 2:15 PM</div>
+              </div>
+
+              <div class="timeline-item purple">
+                <div class="timeline-dot"></div>
+                <div class="timeline-title">Annual Physical Checkup &amp; Vitals Recorded</div>
+                <div class="timeline-sub">Metro Primary Care • BP 118/76 mmHg • Normal</div>
+                <div class="timeline-date">Sep 18, 2025 at 9:00 AM</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Card -->
+          <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h3 style="font-size: 1.15rem; margin-bottom: 12px;" data-i18n="dashboard.nextStep">Next Step: Lab Review</h3>
+              <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5;" data-i18n="dashboard.nextStepDesc">
+                Your latest panel shows borderline Total Cholesterol (218 mg/dL) and Vitamin D insufficiency. Review your tailored doctor discussion questions before your consultation.
+              </p>
+              <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+                <a href="analysis.html" class="btn btn-primary" data-i18n="dashboard.reviewLab">
+                  Review Lab Analysis
+                </a>
+                <a href="assistant.html" class="btn btn-outline" data-i18n="dashboard.discussAI">
+                  Discuss with AI Companion
+                </a>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-light); font-size: 0.775rem; color: var(--text-muted);">
+              🔒 Data Security: All data loaded via temporary demo state. No medical telemetry is persisted to browser storage.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/i18n.js"></script>
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

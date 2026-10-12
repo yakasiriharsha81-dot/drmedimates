@@ -1,0 +1,251 @@
+// Prisma Schema for myHealthMate AI — PostgreSQL
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  PATIENT
+  ADMIN
+}
+
+enum ReportStatus {
+  UPLOADED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ParameterStatus {
+  NORMAL
+  ELEVATED
+  BORDERLINE
+  LOW
+}
+
+enum ChatSender {
+  USER
+  ASSISTANT
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  name          String
+  passwordHash  String
+  role          Role      @default(PATIENT)
+  phone         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions           Session[]
+  reports            MedicalReport[]
+  healthRecords      HealthRecord[]
+  historyEvents      MedicalHistoryEvent[]
+  appointments       Appointment[]
+  notifications      Notification[]
+  chatConversations  ChatConversation[]
+  auditLogs          AuditLog[]
+  passwordResetTokens PasswordResetToken[]
+
+  @@index([email])
+}
+
+model Session {
+  id           String    @id @default(uuid())
+  userId       String
+  token        String    @unique
+  expiresAt    DateTime
+  createdAt    DateTime  @default(now())
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model PasswordResetToken {
+  id         String    @id @default(uuid())
+  userId     String
+  tokenHash  String    @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model MedicalReport {
+  id          String        @id @default(uuid())
+  userId      String
+  filename    String
+  storageKey  String        @unique
+  mimeType    String
+  fileSize    Int
+  category    String        @default("General Lab")
+  status      ReportStatus  @default(UPLOADED)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  file        ReportFile?
+  analysis    ReportAnalysis?
+
+  @@index([userId])
+  @@index([status])
+}
+
+model ReportFile {
+  id          String        @id @default(uuid())
+  reportId    String        @unique
+  fileSize    Int
+  checksum    String
+  localPath   String?
+  createdAt   DateTime      @default(now())
+
+  report      MedicalReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model ReportAnalysis {
+  id                  String             @id @default(uuid())
+  reportId            String             @unique
+  facility            String?            @default("Diagnostic Laboratory")
+  collectedDate       DateTime?
+  summary             String
+  clinicianQuestions  String[]
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  report              MedicalReport      @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  parameters          MedicalParameter[]
+
+  @@index([reportId])
+}
+
+model MedicalParameter {
+  id            String          @id @default(uuid())
+  analysisId    String
+  name          String
+  category      String
+  value         Float
+  unit          String
+  minRange      Float
+  maxRange      Float
+  status        ParameterStatus @default(NORMAL)
+  explanation   String
+  clinicalNote  String?
+  createdAt     DateTime        @default(now())
+
+  analysis      ReportAnalysis  @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  @@index([analysisId])
+  @@index([status])
+}
+
+model HealthRecord {
+  id          String    @id @default(uuid())
+  userId      String
+  title       String
+  category    String
+  recordDate  DateTime
+  provider    String
+  notes       String
+  status      String    @default("Completed")
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([category])
+}
+
+model MedicalHistoryEvent {
+  id          String    @id @default(uuid())
+  userId      String
+  title       String
+  category    String
+  eventDate   DateTime
+  provider    String
+  details     String
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Appointment {
+  id            String    @id @default(uuid())
+  userId        String
+  providerName  String
+  specialty     String
+  appointmentAt DateTime
+  location      String
+  status        String    @default("Scheduled")
+  notes         String?
+  createdAt     DateTime  @default(now())
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  isRead    Boolean   @default(false)
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+model ChatConversation {
+  id        String        @id @default(uuid())
+  userId    String
+  title     String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  ChatMessage[]
+
+  @@index([userId])
+}
+
+model ChatMessage {
+  id              String            @id @default(uuid())
+  conversationId  String
+  sender          ChatSender
+  content         String
+  createdAt       DateTime          @default(now())
+
+  conversation    ChatConversation  @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+}
+
+model AuditLog {
+  id         String    @id @default(uuid())
+  userId     String?
+  action     String
+  resource   String
+  ipAddress  String?
+  userAgent  String?
+  timestamp  DateTime  @default(now())
+
+  user       User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([timestamp])
+}
